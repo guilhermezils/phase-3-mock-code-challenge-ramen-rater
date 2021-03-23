@@ -1,10 +1,10 @@
 // write your code here
-const getRamen = `http://localhost:3000/ramens`
-const getRamenId = `http://localhost:3000/ramens/:id`
+const ramenUrl = `http://localhost:3000/ramens`
+//const ramenUrlId = `http://localhost:3000/ramens/:id`
 const patchRamen = `http://localhost:3000/ramens`
 const parentDiv = document.querySelector(`div#ramen-menu`)
 
-fetch (getRamen) 
+fetch (ramenUrl) 
 .then (response => response.json())
 .then (response => response.forEach(element => renderOneRamen(element)))
 
@@ -21,10 +21,28 @@ function renderOneRamen (element){
 
 parentDiv.addEventListener('click', (event)=> {
     const ramenDetail = document.querySelector('div#ramen-detail')
+    const form =  ramenDetail.nextElementSibling
+    let rating = form[0] 
+    let comment = form[1]
+    
     if(event.target.matches('img')){
       const img = ramenDetail.querySelector('img.detail-image')
-      const selectedImage = event.target.src
-        img.src = selectedImage
+      const selectedImage = event.target
+        img.src = selectedImage.src
+        const id = selectedImage.dataset.id
+        const name = img.nextElementSibling
+        const restaurant = name.nextElementSibling
+
+fetch (ramenUrl + `/${id}`)
+.then(response => response.json())
+.then(ramenObj => {
+name.textContent = ramenObj.name 
+restaurant.textContent = ramenObj.restaurant
+rating.value = ramenObj.rating
+comment.value = ramenObj.comment
+})
+
+
     }
 
 })
